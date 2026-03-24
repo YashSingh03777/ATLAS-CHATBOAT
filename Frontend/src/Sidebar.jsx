@@ -8,7 +8,9 @@ function Sidebar() {
 
     const getAllThreads = async () => {
         try {
-            const response = await fetch("http://localhost:8080/api/thread");
+            // const response = await fetch("http://localhost:8080/api/thread");
+            // deployed link 
+            const response = await fetch("https://atlas-chatboat.onrender.com/api/thread");
             const res = await response.json();
             const filteredData = res.map(thread => ({threadId: thread.threadId, title: thread.title}));
             //console.log(filteredData);
@@ -35,7 +37,9 @@ function Sidebar() {
         setCurrThreadId(newThreadId);
 
         try {
-            const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+            // const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+            // Deployed link 
+             const response = await fetch(`https://atlas-chatboat.onrender.com/api/thread/${newThreadId}`);
             const res = await response.json();
             console.log(res);
             setPrevChats(res);
@@ -48,7 +52,9 @@ function Sidebar() {
 
     const deleteThread = async (threadId) => {
         try {
-            const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {method: "DELETE"});
+            //const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, {method: "DELETE"});
+            // Deployed link 
+            const response = await fetch(`https://atlas-chatboat.onrender.com/api/thread/${threadId}`, { method: "DELETE" });
             const res = await response.json();
             console.log(res);
 
@@ -68,7 +74,7 @@ function Sidebar() {
         <section className="sidebar">
             <button onClick={createNewChat}>
                 <img src="src/assets/bluelogo.png" alt="gpt logo" className="logo"></img>
-                <span><i className="fa-solid fa-pen-to-square"></i></span>
+                <span style={{ marginLeft: "10px" }}><i className="fa-solid fa-pen-to-square"></i></span>
             </button>
 
 

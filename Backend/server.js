@@ -5,10 +5,16 @@ import dotenv from "dotenv";
 import { GoogleGenAI } from "@google/genai";
 import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js"; // make sure chat.js exists
+import path from "path";
 
-// Load environment variables
+// Load environment variables from Render secret file if exists
+const SECRET_FILE_PATH = "/etc/secrets/myenv"; // Replace 'myenv' with your secret file name
+dotenv.config({ path: SECRET_FILE_PATH });
+
+// Fallback: also load local .env for dev
 dotenv.config();
 
+// Extract env variables
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -30,7 +36,10 @@ app.use(express.json());
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ Failed to connect with DB", err);

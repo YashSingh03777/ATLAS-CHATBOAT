@@ -8,7 +8,12 @@ function Sidebar() {
 
     const getAllThreads = async () => {
         try {
-            const response = await fetch("https://atlas-chatboat.onrender.com/api/thread");
+            // Fetch all threads from deployed backend
+            const response = await fetch("https://atlas-chatboat.onrender.com/api/threads");
+
+            // Old local URL (for development)
+            // const response = await fetch("http://localhost:8080/api/threads");
+
             const res = await response.json();
 
             // Safe check: handle object or array
@@ -42,9 +47,12 @@ function Sidebar() {
 
         try {
             const response = await fetch(`https://atlas-chatboat.onrender.com/api/thread/${newThreadId}`);
+
+            // Old local URL (for development)
+            // const response = await fetch(`http://localhost:8080/api/thread/${newThreadId}`);
+
             const res = await response.json();
 
-            // Safe check: ensure prevChats is always an array
             const prevChats = Array.isArray(res) ? res : res.data || [];
             setPrevChats(prevChats);
 
@@ -58,6 +66,10 @@ function Sidebar() {
     const deleteThread = async (threadId) => {
         try {
             const response = await fetch(`https://atlas-chatboat.onrender.com/api/thread/${threadId}`, { method: "DELETE" });
+
+            // Old local URL (for development)
+            // const response = await fetch(`http://localhost:8080/api/thread/${threadId}`, { method: "DELETE" });
+
             const res = await response.json();
             console.log(res);
 

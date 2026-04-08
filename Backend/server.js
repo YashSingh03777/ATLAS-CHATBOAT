@@ -7,6 +7,7 @@ import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js"; // make sure chat.js exists
 import path from "path";
 
+<<<<<<< HEAD
 // Load environment variables from Render secret file if exists
 const SECRET_FILE_PATH = "/etc/secrets/myenv"; // Replace 'myenv' with your secret file name
 dotenv.config({ path: SECRET_FILE_PATH });
@@ -15,11 +16,21 @@ dotenv.config({ path: SECRET_FILE_PATH });
 dotenv.config();
 
 // Extract env variables
+=======
+// Load environment variables from Render secret file if it exists
+const SECRET_FILE_PATH = "/etc/secrets/myenv"; // Replace 'myenv' with your secret file name
+dotenv.config({ path: SECRET_FILE_PATH });
+
+// Fallback: load local .env for development
+dotenv.config();
+
+// Extract environment variables
+>>>>>>> 70d6a37 (Update server.js with Render secret file support and MongoDB fix)
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
-// Check env variables
+// Check for required environment variables
 if (!MONGODB_URI) {
   console.error("❌ MONGODB_URI is missing!");
   process.exit(1);
@@ -36,10 +47,14 @@ app.use(express.json());
 // Connect to MongoDB
 const connectDB = async () => {
   try {
+<<<<<<< HEAD
     await mongoose.connect(MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
+=======
+    await mongoose.connect(MONGODB_URI); // options removed for Mongoose 6+
+>>>>>>> 70d6a37 (Update server.js with Render secret file support and MongoDB fix)
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ Failed to connect with DB", err);
@@ -50,7 +65,7 @@ const connectDB = async () => {
 // Initialize Google GenAI
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-// Health route
+// Health check route
 app.get("/", (req, res) => {
   res.json({ status: "success", message: "Gemini API running 🚀" });
 });
@@ -69,7 +84,6 @@ app.post("/test", async (req, res) => {
     });
 
     const cleanText = result.text.trim();
-
     res.json({ success: true, prompt, answer: cleanText });
   } catch (err) {
     console.error("❌ /test error:", err.message);

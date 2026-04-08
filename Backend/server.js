@@ -7,16 +7,6 @@ import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js"; // make sure chat.js exists
 import path from "path";
 
-<<<<<<< HEAD
-// Load environment variables from Render secret file if exists
-const SECRET_FILE_PATH = "/etc/secrets/myenv"; // Replace 'myenv' with your secret file name
-dotenv.config({ path: SECRET_FILE_PATH });
-
-// Fallback: also load local .env for dev
-dotenv.config();
-
-// Extract env variables
-=======
 // Load environment variables from Render secret file if it exists
 const SECRET_FILE_PATH = "/etc/secrets/myenv"; // Replace 'myenv' with your secret file name
 dotenv.config({ path: SECRET_FILE_PATH });
@@ -25,7 +15,6 @@ dotenv.config({ path: SECRET_FILE_PATH });
 dotenv.config();
 
 // Extract environment variables
->>>>>>> 70d6a37 (Update server.js with Render secret file support and MongoDB fix)
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -47,14 +36,8 @@ app.use(express.json());
 // Connect to MongoDB
 const connectDB = async () => {
   try {
-<<<<<<< HEAD
-    await mongoose.connect(MONGODB_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
-=======
-    await mongoose.connect(MONGODB_URI); // options removed for Mongoose 6+
->>>>>>> 70d6a37 (Update server.js with Render secret file support and MongoDB fix)
+    // Mongoose 6+ no longer needs useNewUrlParser/useUnifiedTopology
+    await mongoose.connect(MONGODB_URI);
     console.log("✅ MongoDB Connected");
   } catch (err) {
     console.error("❌ Failed to connect with DB", err);

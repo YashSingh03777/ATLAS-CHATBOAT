@@ -1,18 +1,20 @@
+// server.js
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
-import { GoogleGenAI } from "@google/genai";
 import mongoose from "mongoose";
 import chatRoutes from "./routes/chat.js";
+import { GoogleGenAI } from "@google/genai";
 
-// Only load local .env in development
+// Load .env only in development (local)
 if (process.env.NODE_ENV !== "production") {
-  dotenv.config(); 
+  import('dotenv').then(dotenv => dotenv.config());
 }
 
+// Extract environment variables
 const PORT = process.env.PORT || 8080;
 const MONGODB_URI = process.env.MONGODB_URI;
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
+const JWT_SECRET = process.env.JWT_SECRET;
 
 // Check required env variables
 if (!MONGODB_URI) {
@@ -42,7 +44,7 @@ const connectDB = async () => {
 // Initialize Google GenAI
 const ai = new GoogleGenAI({ apiKey: GEMINI_API_KEY });
 
-// Health check
+// Health route
 app.get("/", (req, res) => {
   res.json({ status: "success", message: "Gemini API running 🚀" });
 });
@@ -51,14 +53,17 @@ app.get("/", (req, res) => {
 app.post("/test", async (req, res) => {
   try {
     const { prompt } = req.body;
-    if (!prompt) return res.status(400).json({ success: false, message: "Prompt is required" });
+    if (!prompt) {
+      return res.status(400).json({ success: false, message: "Prompt is required" });
+    }
 
     const result = await ai.models.generateContent({
       model: "gemini-3.1-flash-lite-preview",
       contents: prompt
     });
 
-    res.json({ success: true, prompt, answer: result.text.trim() });
+    const cleanText = result.text.trim();
+    res.json({ success: true, prompt, answer: cleanText });
   } catch (err) {
     console.error("❌ /test error:", err.message);
     res.status(500).json({ success: false, message: "AI request failed", error: err.message });
